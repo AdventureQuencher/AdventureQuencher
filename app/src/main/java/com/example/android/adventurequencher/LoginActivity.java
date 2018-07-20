@@ -3,10 +3,12 @@ package com.example.android.adventurequencher;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 public class LoginActivity extends AppCompatActivity
 {
 
+    LinearLayout login;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -18,5 +20,8 @@ public class LoginActivity extends AppCompatActivity
 
         usernameWrapper.setHint("Username");
         passwordWrapper.setHint("Password");
+
+        login = findViewById(R.id.login);
+        login.setVisibility(LinearLayout.GONE); //hide login input fields
     }
 }

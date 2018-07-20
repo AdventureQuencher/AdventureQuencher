@@ -9,6 +9,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme"
     android:background="@drawable/background_snow"
+    android:layout_gravity="center_horizontal"
     tools:context=".LoginActivity">
     <!-- logo image display -->
     <ImageView
@@ -16,10 +17,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/app_logo_text"/>
+        android:src="@drawable/app_logo_text"
+        />
 
-    <!-- username and password input fields -->
     <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/red"
+            android:text="Sign Up"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Log in"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+
+    <!--<RelativeLayout
+        android:id="@+id/login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -65,6 +93,8 @@
             android:background="@android:color/holo_green_dark"
             android:text="Login"/>
 
-    </LinearLayout>
+    </RelativeLayout>-->
+
+    <!-- username and password input fields -->
 
 </LinearLayout>
