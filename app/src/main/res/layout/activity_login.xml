@@ -6,10 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/background_snow"
     android:orientation="vertical"
     android:theme="@style/AppTheme"
-    android:background="@drawable/background_snow"
-    android:layout_gravity="center_horizontal"
     tools:context=".LoginActivity">
     <!-- logo image display -->
     <ImageView
@@ -20,10 +20,11 @@
         android:src="@drawable/app_logo_text"
         />
 
+    <!--log in/sign up buttons -->
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         >
 
         <Button
@@ -43,58 +44,9 @@
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:text="Log in"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/white"/>
     </LinearLayout>
 
-    <!--<RelativeLayout
-        android:id="@+id/login"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.5"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/usernameWrapper"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:textColor="@android:color/holo_red_light"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordWrapper"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/usernameWrapper"
-            android:layout_marginTop="4dp">
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textColor="@android:color/holo_red_light"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@android:color/holo_green_dark"
-            android:text="Login"/>
-
-    </RelativeLayout>-->
-
-    <!-- username and password input fields -->
 
 </LinearLayout>
