@@ -1,6 +1,5 @@
 package com.example.android.adventurequencher;
 
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +18,7 @@ public class LoginActivity extends AppCompatActivity
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Replace the contents of the container with the new fragment
-        ft.replace(R.id.login_placeholder, new LoginFragment());
-        // or ft.add(R.id.your_placeholder, new FooFragment());
+        ft.add(R.id.login_placeholder, IntroFragment.newInstance());
         // Complete the changes added above
         ft.commit();
 

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/background_snow"
+
     android:orientation="vertical"
     android:theme="@style/AppTheme"
     tools:context=".LoginActivity">
@@ -24,34 +24,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
-
-    <!--log in/sign up buttons
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        >
-
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/red"
-            android:text="Sign Up"
-            android:textColor="@color/white"/>
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="Log in"
-            android:textColor="@color/white"/>
-    </LinearLayout>-->
-
-
 
 </LinearLayout>
