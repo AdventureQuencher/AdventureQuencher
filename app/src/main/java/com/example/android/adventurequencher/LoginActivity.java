@@ -9,8 +9,6 @@ import android.widget.LinearLayout;
 
 public class LoginActivity extends AppCompatActivity
 {
-
-    LinearLayout login;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -19,7 +17,7 @@ public class LoginActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        IntroFragment fragment = new IntroFragment();
+        LoginFragment fragment = new LoginFragment();
         fragmentTransaction.add(R.id.login_placeholder, fragment);
         fragmentTransaction.commit();
     }
