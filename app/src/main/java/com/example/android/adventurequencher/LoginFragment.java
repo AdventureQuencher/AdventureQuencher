@@ -9,10 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginFragment extends Fragment implements View.OnClickListener
 {
+    private EditText email;
+    private EditText password;
     public LoginFragment()
     {
         // Required empty public constructor
@@ -31,15 +36,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener
     {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        email = (EditText) view.findViewById(R.id.email);
+        password = (EditText) view.findViewById(R.id.password);
+
+        Button login = (Button) view.findViewById(R.id.loginButton);
         TextView signUpLink = (TextView) view.findViewById(R.id.link_signup);
+
         signUpLink.setOnClickListener(this);
+        login.setOnClickListener(this);
         // Inflate the layout for this fragment
         return view;
     }
 
     public void onClick(View view)
     {
-        if(view.getId() == R.id.link_signup)
+        if (view.getId() == R.id.loginButton)
+        {
+            String emailInput = email.getText().toString();
+            String passwordInput = password.getText().toString();
+
+            ValidateLogin request = new ValidateLogin(emailInput, passwordInput);
+
+        }
+        else if(view.getId() == R.id.link_signup)
         {
             // Begin the transaction
             FragmentTransaction ft = getFragmentManager().beginTransaction();
