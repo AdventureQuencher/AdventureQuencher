@@ -45,7 +45,7 @@ public class MenuMaps extends FragmentActivity implements OnMapReadyCallback {
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.mapstyle));
+                            this, R.raw.grey_mapstyle));
 
             if (!success) {
                 Log.e("MenuMaps", "Style parsing failed.");
