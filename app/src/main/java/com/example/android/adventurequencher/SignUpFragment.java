@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener
 {
@@ -41,7 +43,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
     {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
+        Button signUpButton = (Button) view.findViewById(R.id.createAccountButton);
         TextView loginLink = (TextView) view.findViewById(R.id.link_login);
+
+        signUpButton.setOnClickListener(this);
         loginLink.setOnClickListener(this);
 
         // Inflate the layout for this fragment
@@ -51,6 +56,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
 
     public void onClick(View view)
     {
+        if (view.getId() == R.id.createAccountButton)
+        {
+            Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
+        }
         if (view.getId() == R.id.link_login)
         {
             // Begin the transaction
