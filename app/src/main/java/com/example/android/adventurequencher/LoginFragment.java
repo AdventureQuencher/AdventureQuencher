@@ -1,5 +1,6 @@
 package com.example.android.adventurequencher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -55,7 +56,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             String emailInput = email.getText().toString();
             String passwordInput = password.getText().toString();
 
-            ValidateLogin request = new ValidateLogin(emailInput, passwordInput);
+            Intent intent = new Intent(getActivity(),MenuMaps.class);
+            startActivity(intent);
 
         }
         else if(view.getId() == R.id.link_signup)
