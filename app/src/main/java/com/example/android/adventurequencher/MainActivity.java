@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 try {
                     sleep(1000);
-                    Intent intent = new Intent(getApplicationContext(),MenuMaps.class);
+                    Intent intent = new Intent(getApplicationContext(),MainQuest.class);
                     startActivity(intent);
                     finish();
                 } catch (InterruptedException e) {

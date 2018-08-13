@@ -37,7 +37,9 @@
 
         <activity
             android:name=".MenuMaps"
-            android:label="@string/title_activity_menu_maps"></activity>
+            android:label="@string/title_activity_menu_maps" />
+        <activity android:name=".QuestLog" />
+        <activity android:name=".MainQuest"></activity>
     </application>
 
 </manifest>
