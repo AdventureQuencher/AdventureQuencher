@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Adventure Quencher</string>
     <string name="title_activity_menu_maps">Map</string>
+    <string name="title_activity_bottom_navigate">Menu</string>
+    <string name="title_quest">Quest Log</string>
+    <string name="title_dashboard">Leaderboards</string>
+    <string name="title_notifications">Rewards</string>
 </resources>

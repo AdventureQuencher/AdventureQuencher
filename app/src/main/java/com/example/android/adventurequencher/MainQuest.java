@@ -22,6 +22,12 @@ public class MainQuest extends AppCompatActivity {
         locations.add("item 1");
         locations.add("item 2");
         locations.add("item 3");
+        locations.add("item 1");
+        locations.add("item 2");
+        locations.add("item 3");
+        locations.add("item 1");
+        locations.add("item 2");
+        locations.add("item 3");
 
         initRecyclerView();
     }
