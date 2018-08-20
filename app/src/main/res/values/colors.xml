@@ -7,4 +7,7 @@
     <color name="white">#ffffff</color>
     <color name="green">#2bff00</color>
     <color name="grey">#515151</color>
+    <color name="colorPrimary">#9DC3E6</color>
+    <color name="colorPrimaryDark">#8190A5</color>
+    <color name="colorAccent">#8190A5</color>
 </resources>

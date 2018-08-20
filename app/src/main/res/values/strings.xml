@@ -5,4 +5,9 @@
     <string name="not_a_member">Not a member?&#160;<u>Register Here!</u></string>
 
     <string name="already_have_account">Already have an account?&#160;<u>Log in!</u></string>
+    <string name="title_activity_menu_maps">Map</string>
+    <string name="title_activity_bottom_navigate">Menu</string>
+    <string name="title_quest">Quest Log</string>
+    <string name="title_dashboard">Leaderboards</string>
+    <string name="title_notifications">Rewards</string>
 </resources>
