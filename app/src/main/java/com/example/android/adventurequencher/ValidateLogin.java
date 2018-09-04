@@ -1,21 +1,16 @@
 package com.example.android.adventurequencher;
 
 import android.os.AsyncTask;
+import android.widget.Button;
+import android.widget.Toast;
 
-public class ValidateLogin extends AsyncTask<String, String, String>
-{
-    private String email;
-    private String password;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
-    public ValidateLogin(String emailInput, String passwordInput)
-    {
-        email = emailInput;
-        password = passwordInput;
-    }
 
-    @Override
-    protected String doInBackground(String... params)
-    {
-        return null;
-    }
-}
