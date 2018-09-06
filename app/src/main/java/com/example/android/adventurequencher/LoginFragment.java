@@ -167,10 +167,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener
         {
             if (result.equalsIgnoreCase("true"))
             {
-                Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(),MenuMaps.class);
+                startActivity(intent);
             } else
             {
-                Toast.makeText(getActivity(), "Login failed.", Toast.LENGTH_LONG).show();
+                TextView error = (TextView) getView().findViewById(R.id.loginError);
+
+                error.setVisibility(View.VISIBLE);
             }
         }
     }
