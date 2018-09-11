@@ -22,12 +22,21 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         if(checkServices()){
-            init();
+            Thread myThread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(1000);
+                        Intent intent = new Intent(getApplicationContext(), MenuMaps.class);
+                        startActivity(intent);
+                        finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            myThread.start();
         }
-    }
-
-    private void init(){
-
     }
 
     public boolean checkServices(){
