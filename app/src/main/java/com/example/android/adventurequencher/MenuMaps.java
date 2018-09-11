@@ -1,6 +1,7 @@
 package com.example.android.adventurequencher;
 
 import android.content.res.Resources;
+import android.nfc.Tag;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,14 @@ public class MenuMaps extends FragmentActivity implements OnMapReadyCallback {
     }
 
     private void getDeviceLocation(){
+
+        mfusedLocationProviderclient = LocationServices.getFusedLocationProviderClient(this);
+
+
+
+    }
+
+    private void moveCamera(LatLng lat, float zoom){
 
     }
 
