@@ -35,7 +35,7 @@ public class BottomNavigate extends AppCompatActivity {
                    startActivity(quest);
                     return true;
                 case R.id.navigation_dashboard:
-                 getSupportFragmentManager().beginTransaction().replace(R.id.m_frame,mapFragment).commit();
+                    mTextMessage.setText("");
                     return true;
                 case R.id.navigation_notifications:
                    mTextMessage.setText("null");
@@ -49,9 +49,9 @@ public class BottomNavigate extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigate);
+        getSupportFragmentManager().beginTransaction().replace(R.id.m_frame,mapFragment).commit();
 
         mTextMessage = findViewById(R.id.message);
-        mFrame = findViewById(R.id.m_frame);
         BottomNavigationView navigation = findViewById(R.id.navigation);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
