@@ -115,6 +115,6 @@ public class MenuMaps extends AppCompatActivity implements OnMapReadyCallback {
             return;
         }
         mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 }
