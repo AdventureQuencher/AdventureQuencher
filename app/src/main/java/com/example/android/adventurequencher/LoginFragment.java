@@ -135,6 +135,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener
                 request.flush();
                 request.close();
 
+                int status = connection.getResponseCode();
+
+                Log.d("aq", "status code:"+status);
+
                 Log.d("aq", "starting to build string response from server");
                 // Read data sent from server
                 InputStream input = connection.getInputStream();
@@ -158,7 +162,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             }
             catch (Exception e)
             {
-                //e.printStackTrace();
+                e.printStackTrace();
                 Log.d("aq", "error!");
             }
             return response;
@@ -167,6 +171,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener
         @Override
         protected void onPostExecute(String result)
         {
+            Toast.makeText(getActivity(), result,
+                    Toast.LENGTH_LONG).show();
+            /*
             if (result.equalsIgnoreCase("true"))
             {
                 Intent intent = new Intent(getActivity(),MenuMaps.class);
@@ -176,7 +183,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
                 TextView error = (TextView) getView().findViewById(R.id.loginError);
 
                 error.setVisibility(View.VISIBLE);
-            }
+            }*/
         }
     }
 }
