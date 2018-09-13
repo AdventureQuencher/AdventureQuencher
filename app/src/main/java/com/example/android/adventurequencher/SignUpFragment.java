@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,12 @@ import java.net.URLEncoder;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener
 {
+
+    private EditText email;
+    private EditText password;
+    private EditText password2;
+    private EditText displayName;
+
     public SignUpFragment()
     {
         // Required empty public constructor
@@ -55,6 +62,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
 
         Button signUpButton = (Button) view.findViewById(R.id.createAccountButton);
         TextView loginLink = (TextView) view.findViewById(R.id.link_login);
+        email = (EditText) view.findViewById(R.id.signUpEmail);
+        password = (EditText) view.findViewById(R.id.signUpPassword);
+        password2 = (EditText) view.findViewById(R.id.signUpPassword2);
+        displayName = (EditText) view.findViewById(R.id.signUpName);
 
         signUpButton.setOnClickListener(this);
         loginLink.setOnClickListener(this);
@@ -68,7 +79,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
     {
         if (view.getId() == R.id.createAccountButton)
         {
-            Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
+            String emailInput = email.getText().toString();
+            String passwordInput = password.getText().toString();
+            String password2Input = password2.getText().toString();
+            String displayNameInput = displayName.getText().toString();
+
+
+
+            new ValidateRegister(emailInput, passwordInput, password2Input, displayNameInput).execute();
         }
         if (view.getId() == R.id.link_login)
         {
@@ -86,11 +104,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
     {
         private String email;
         private String password;
+        private String password2;
+        private String displayName;
 
-        public ValidateRegister(String emailInput, String passwordInput)
+        public ValidateRegister(String emailInput, String passwordInput, String password2Input, String displayNameInput)
         {
             email = emailInput;
             password = passwordInput;
+            password2 = password2Input;
+            displayName = displayNameInput;
         }
 
         protected void onPreExecute(String result)
@@ -110,6 +132,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                 String link = "http://43.245.55.133/validateRegister.php";
                 String data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
                 data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+                data += "&" + URLEncoder.encode("password2", "UTF-8") + "=" + URLEncoder.encode(password2, "UTF-8");
+                data += "&" + URLEncoder.encode("display_name", "UTF-8") + "=" + URLEncoder.encode(displayName, "UTF-8");
                 URL url = new URL(link);
 
                 Log.d("aq", "credentials set");
@@ -158,16 +182,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         @Override
         protected void onPostExecute(String result)
         {
-            if (result.equalsIgnoreCase("true"))
-            {
-                Intent intent = new Intent(getActivity(),MenuMaps.class);
-                startActivity(intent);
-            } else
-            {
-                TextView error = (TextView) getView().findViewById(R.id.loginError);
-
-                error.setVisibility(View.VISIBLE);
-            }
+            Toast.makeText(getActivity(), result,
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

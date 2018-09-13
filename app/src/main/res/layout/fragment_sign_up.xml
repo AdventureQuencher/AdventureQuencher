@@ -15,12 +15,12 @@
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/usernameWrapper"
+                android:id="@+id/emailWrapper"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/username"
+                    android:id="@+id/signUpEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="4dp">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/signUpPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
@@ -51,7 +51,7 @@
                 android:layout_marginTop="4dp">
 
                 <EditText
-                    android:id="@+id/password2"
+                    android:id="@+id/signUpPassword2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Confirm Password"
@@ -67,7 +67,7 @@
                 android:layout_marginTop="4dp">
 
                 <EditText
-                    android:id="@+id/name"
+                    android:id="@+id/signUpName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name"
