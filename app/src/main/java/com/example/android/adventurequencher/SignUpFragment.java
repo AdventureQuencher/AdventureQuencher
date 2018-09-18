@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -143,39 +144,48 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod("POST");
 
-                Log.d("aq", "parameters set, url connection opened");
 
-                request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(data);
-                request.flush();
-                request.close();
-
-                Log.d("aq", "starting to build string response from server");
-                // Read data sent from server
-                InputStream input = connection.getInputStream();
-                Log.d("aq", "input stream instantiate");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                Log.d("aq", "buffered reader instantiate");
-                StringBuilder sb = new StringBuilder();
-                Log.d("aq", "string builder instantiate");
-                String line;
-                Log.d("aq", "reading lines");
-                while ((line = reader.readLine()) != null)
+                //test internet connection by pinging a server
+                if (!isNetworkWorking())
                 {
-                    sb.append(line);
-                }
+                    response = "no connection";
+                } else
+                {
+                    Log.d("aq", "parameters set, url connection opened");
 
-                // Response from server after login process will be stored in response variable.
-                response = sb.toString();
-                Log.d("aq", "server response!!!!---->"+response);
-                input.close();
-                reader.close();
+                    request = new OutputStreamWriter(connection.getOutputStream());
+                    request.write(data);
+                    request.flush();
+                    request.close();
+
+                    Log.d("aq", "starting to build string response from server");
+                    // Read data sent from server
+                    InputStream input = connection.getInputStream();
+                    Log.d("aq", "input stream instantiate");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    Log.d("aq", "buffered reader instantiate");
+                    StringBuilder sb = new StringBuilder();
+                    Log.d("aq", "string builder instantiate");
+                    String line;
+                    Log.d("aq", "reading lines");
+                    while ((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                    }
+
+                    // Response from server after login process will be stored in response variable.
+                    response = sb.toString();
+                    Log.d("aq", "server response!!!!---->" + response);
+                    input.close();
+                    reader.close();
+                }
             }
-            catch (Exception e)
-            {
-                //e.printStackTrace();
-                Log.d("aq", "error!");
-            }
+            catch(Exception e)
+                    {
+                        //e.printStackTrace();
+                        Log.d("aq", "error!");
+                    }
+
             return response;
         }
 
@@ -184,6 +194,29 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         {
             Toast.makeText(getActivity(), result,
                     Toast.LENGTH_LONG).show();
+        }
+
+        public boolean isNetworkWorking()
+        {
+            //test internet connection
+
+            try
+            {
+                //send ping to the server
+                Runtime runtime = Runtime.getRuntime();
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 43.245.55.133");
+                int exitValue = ipProcess.waitFor();
+                return (exitValue == 1);    //return true if response given
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            return false;
         }
     }
 }
