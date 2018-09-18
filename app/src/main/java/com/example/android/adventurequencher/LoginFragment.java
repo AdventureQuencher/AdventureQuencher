@@ -1,12 +1,18 @@
 package com.example.android.adventurequencher;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +22,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 
 public class LoginFragment extends Fragment implements View.OnClickListener
 {
     private EditText email;
     private EditText password;
+
     public LoginFragment()
     {
         // Required empty public constructor
@@ -69,8 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             startActivity(intent);
             new ValidateLogin(emailInput, passwordInput).execute();
 
-        }
-        else if(view.getId() == R.id.link_signup)
+        } else if (view.getId() == R.id.link_signup)
         {
             // Begin the transaction
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -81,6 +93,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             ft.addToBackStack(null);
         }
     }
+
     public static LoginFragment newInstance()
     {
         Bundle args = new Bundle();
@@ -116,65 +129,119 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             String response = null;
             try
             {
+                //establish connection string
                 String link = "http://43.245.55.133/validateLogin.php";
+                //user inputs stored in data string to be sent to server
                 String data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
                 data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
                 URL url = new URL(link);
 
                 Log.d("aq", "credentials set");
 
+                //connect to server using the link
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                connection.setRequestMethod("POST");
+                connection.setRequestMethod("POST");       //POST method
 
-                Log.d("aq", "parameters set, url connection opened");
-
-                request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(data);
-                request.flush();
-                request.close();
-
-                int status = connection.getResponseCode();
-
-                Log.d("aq", "status code:"+status);
-
-                Log.d("aq", "starting to build string response from server");
-                // Read data sent from server
-                InputStream input = connection.getInputStream();
-                Log.d("aq", "input stream instantiate");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                Log.d("aq", "buffered reader instantiate");
-                StringBuilder sb = new StringBuilder();
-                Log.d("aq", "string builder instantiate");
-                String line;
-                Log.d("aq", "reading lines");
-                while ((line = reader.readLine()) != null)
+                //test internet connection by pinging a server
+                if (!isNetworkWorking())
                 {
-                    sb.append(line);
+                    response = "no connection";
                 }
+                else
+                {
+                    Log.d("aq", "parameters set, url connection opened");
 
-                // Response from server after login process will be stored in response variable.
-                response = sb.toString();
-                Log.d("aq", "server response!!!!---->"+response);
-                input.close();
-                reader.close();
+                    //set up stream to write to server
+                    request = new OutputStreamWriter(connection.getOutputStream());
+                    request.write(data);    //send user input to server
+                    request.flush();
+                    request.close();    //close stream
+
+                    //status code sent from server
+                    int status = connection.getResponseCode();
+
+                    Log.d("aq", "status code:" + status);
+
+                    Log.d("aq", "starting to build string response from server");
+                    // Read data sent from server
+                    InputStream input = connection.getInputStream();
+                    Log.d("aq", "input stream instantiate");
+
+                    //server response
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+                    Log.d("aq", "buffered reader instantiate");
+                    StringBuilder sb = new StringBuilder();
+
+                    Log.d("aq", "string builder instantiate");
+
+                    String line;
+
+                    Log.d("aq", "reading lines");
+
+                    //read lines sent by server
+                    while ((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                    }
+
+                    // Response from server after login process will be stored in response variable.
+                    response = sb.toString();
+                    Log.d("aq", "server response!!!!---->" + response);
+                    //close streams
+                    input.close();
+                    reader.close();
+                }
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+
+                //e.printStackTrace();
                 Log.d("aq", "error!");
+                Toast.makeText(getActivity(), "An error occurred when connecting to the server",
+                        Toast.LENGTH_LONG).show();
             }
+
+
             return response;
         }
 
         @Override
         protected void onPostExecute(String result)
         {
-            Toast.makeText(getActivity(), result,
-                    Toast.LENGTH_LONG).show();
+            if(result.equals("no connection"))
+            {
+                Toast.makeText(getActivity(), "Error connecting to server, please check your internet connection settings.",
+                        Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                try
+                {
+                    JSONObject jsonResult = new JSONObject(result);
+                    if (!jsonResult.getBoolean("error"))
+                    {
+                        Intent intent = new Intent(getActivity(), MenuMaps.class);
+                        startActivity(intent);
+                    } else
+                    {
+                        Toast.makeText(getActivity(), "Login failed",
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                }
+                catch (JSONException e)
+                {
+                    Toast.makeText(getActivity(), "Error logging in.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+
+
             /*
-            if (result.equalsIgnoreCase("true"))
+            if (=======)
             {
                 Intent intent = new Intent(getActivity(),MenuMaps.class);
                 startActivity(intent);
@@ -185,5 +252,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener
                 error.setVisibility(View.VISIBLE);
             }*/
         }
+
+        public boolean isNetworkWorking()
+        {
+            //test internet connection
+
+            try
+            {
+                //send ping to the server
+                Runtime runtime = Runtime.getRuntime();
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 43.245.55.133");
+                int exitValue = ipProcess.waitFor();
+                return (exitValue == 1);    //return true if response given
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
     }
 }
