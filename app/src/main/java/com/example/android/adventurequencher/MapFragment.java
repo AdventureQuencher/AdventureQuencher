@@ -189,7 +189,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
     }
 }

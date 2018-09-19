@@ -7,4 +7,5 @@
     <color name="white">#ffffff</color>
     <color name="green">#2bff00</color>
     <color name="grey">#515151</color>
+    <color name = "menuBlue">#C00000</color>
 </resources>
