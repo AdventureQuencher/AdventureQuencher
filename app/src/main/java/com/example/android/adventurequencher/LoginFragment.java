@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             String emailInput = email.getText().toString();
             String passwordInput = password.getText().toString();
 
-            Intent intent = new Intent(getActivity(), MenuMaps.class);
+            Intent intent = new Intent(getActivity(), BottomNavigate.class);
             startActivity(intent);
 
         }
