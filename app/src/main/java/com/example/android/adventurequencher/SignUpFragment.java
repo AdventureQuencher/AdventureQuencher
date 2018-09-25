@@ -232,28 +232,24 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                     //no error = successful login
                     if (!jsonResult.getBoolean("error"))
                     {
-                        boolean t = false;
-                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+                        final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
 
                         dlgAlert.setMessage("Account successfully created!");
                         dlgAlert.setTitle("Congratulations");
                         dlgAlert.setPositiveButton("OK", null);
                         dlgAlert.setCancelable(true);
-                        dlgAlert.create().show();
+
 
                         dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                                     public void onClick(DialogInterface dialog, int which)
                                     {
-                                        //Intent intent = new Intent(getActivity(), BottomNavigate.class);
-                                        //startActivity(intent);
-                                        boolean t = true;
+                                        Intent intent = new Intent(getActivity(), BottomNavigate.class);
+                                        startActivity(intent);
+
                                     }
                                 });
-                        if(t)
-                        {
-
-                        }
+                        dlgAlert.create().show();
                     } else
                     {
                         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
