@@ -43,12 +43,11 @@
         <activity
             android:name=".MenuMaps"
             android:label="@string/title_activity_menu_maps" />
-
-        <activity android:name=".BottomNavigate"
+        <activity
+            android:name=".BottomNavigate"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"></activity>
-
-        <activity android:name=".MainQuest"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".MainQuest" />
     </application>
 
 </manifest>
