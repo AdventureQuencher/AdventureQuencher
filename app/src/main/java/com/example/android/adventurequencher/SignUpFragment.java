@@ -1,7 +1,12 @@
 package com.example.android.adventurequencher;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -107,6 +115,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         private String password;
         private String password2;
         private String displayName;
+        private ProgressDialog nDialog;
 
         public ValidateRegister(String emailInput, String passwordInput, String password2Input, String displayNameInput)
         {
@@ -116,9 +125,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
             displayName = displayNameInput;
         }
 
-        protected void onPreExecute(String result)
+        protected void onPreExecute()
         {
-            //TODO: ADD LOADING SCREEN HERE TO SHOW LOGGING IN ATTEMPT
+            Log.d("aq", "registration thread started");
+            nDialog = new ProgressDialog(getActivity());
+            nDialog.setMessage("Please wait..");
+            nDialog.setTitle("Registering account");
+            nDialog.setIndeterminate(false);
+            nDialog.setCancelable(true);
+            nDialog.show();
         }
 
         @Override
@@ -146,7 +161,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
 
 
                 //test internet connection by pinging a server
-                if (!isNetworkWorking())
+                if (!isNetworkWorking(getActivity()))
                 {
                     response = "no connection";
                 } else
@@ -192,31 +207,93 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         @Override
         protected void onPostExecute(String result)
         {
-            Toast.makeText(getActivity(), result,
-                    Toast.LENGTH_LONG).show();
-        }
-
-        public boolean isNetworkWorking()
-        {
-            //test internet connection
-
             try
             {
-                //send ping to the server
-                Runtime runtime = Runtime.getRuntime();
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 43.245.55.133");
-                int exitValue = ipProcess.waitFor();
-                return (exitValue == 1);    //return true if response given
-            }
-            catch (IOException e)
+                if (nDialog.isShowing())
+                {
+                    nDialog.dismiss();
+                }
+                nDialog = null;
+            } catch (Exception e)
             {
-                e.printStackTrace();
+                // nothing
             }
-            catch (InterruptedException e)
+
+            if(result.equals("no connection"))
             {
-                e.printStackTrace();
+                Toast.makeText(getActivity(), "Error connecting to server, please check your internet connection settings.",
+                        Toast.LENGTH_LONG).show();
             }
-            return false;
+            else
+            {
+                try
+                {
+                    JSONObject jsonResult = new JSONObject(result);
+                    //no error = successful login
+                    if (!jsonResult.getBoolean("error"))
+                    {
+                        boolean t = false;
+                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+
+                        dlgAlert.setMessage("Account successfully created!");
+                        dlgAlert.setTitle("Congratulations");
+                        dlgAlert.setPositiveButton("OK", null);
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+
+                        dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                                    public void onClick(DialogInterface dialog, int which)
+                                    {
+                                        //Intent intent = new Intent(getActivity(), BottomNavigate.class);
+                                        //startActivity(intent);
+                                        boolean t = true;
+                                    }
+                                });
+                        if(t)
+                        {
+
+                        }
+                    } else
+                    {
+                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+
+                        dlgAlert.setMessage("Error registering account. Email already exists");
+                        dlgAlert.setTitle("Registration Failed");
+                        dlgAlert.setPositiveButton("OK", null);
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+
+                        dlgAlert.setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
+
+                    }
+                }
+                catch (JSONException e)
+                {
+                    Toast.makeText(getActivity(), "Error Registering account.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        public boolean isNetworkWorking(Context context)
+        {
+            if(context != null) {
+
+                ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                return (networkInfo != null && networkInfo.isConnected());
+
+            }
+            else {
+                Log.d("Network","Not Connected");
+                return false;
+            }
         }
     }
 }

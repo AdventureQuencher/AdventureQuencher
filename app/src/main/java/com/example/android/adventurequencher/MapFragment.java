@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import static android.support.constraint.Constraints.TAG;
 import static com.example.android.adventurequencher.MenuMaps.REQUEST_CHECK_SETTINGS;
 

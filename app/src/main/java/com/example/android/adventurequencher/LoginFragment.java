@@ -2,8 +2,11 @@ package com.example.android.adventurequencher;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,17 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 
 public class LoginFragment extends Fragment implements View.OnClickListener
 {
@@ -145,7 +145,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
                 connection.setRequestMethod("POST");       //POST method
 
                 //test internet connection by pinging a server
-                if (!isNetworkWorking())
+                if (!isNetworkWorking(getActivity()))
                 {
                     response = "no connection";
                 }
@@ -264,27 +264,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             }
         }
 
-        public boolean isNetworkWorking()
+        public boolean isNetworkWorking(Context context)
         {
-            //test internet connection
+            if(context != null) {
 
-            try
-            {
-                //send ping to the server
-                Runtime runtime = Runtime.getRuntime();
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 43.245.55.133");
-                int exitValue = ipProcess.waitFor();
-                return (exitValue == 1);    //return true if response given
+                ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                return (networkInfo != null && networkInfo.isConnected());
+
             }
-            catch (IOException e)
-            {
-                e.printStackTrace();
+            else {
+                Log.d("Network","Not Connected");
+                return false;
             }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            return false;
         }
 
     }
