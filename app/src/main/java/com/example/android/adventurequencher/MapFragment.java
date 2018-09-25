@@ -190,6 +190,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
+        LatLng tempLat = new LatLng(-37.132, 174.797);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Spookers"));
+        tempLat = new LatLng(-36.993552, 174.883533);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Rainbows End"));
+        tempLat = new LatLng(-36.848139, 174.762148);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Sky Tower"));
+        tempLat = new LatLng(-36.846651, 174.817454);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Kelly Tarton Sea Life Aquarium"));
+        tempLat = new LatLng(-36.801832, 175.08591);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Waiheke Island Exploration and Zipline"));
+        tempLat = new LatLng(-36.998043, 174.889039);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Vector Wero Whitewater Park"));
+        tempLat = new LatLng(-36.851285, 174.763938);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Odyssey Sensory Maze"));
+        tempLat = new LatLng(-36.999545, 174.794884 );
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Butterfly Creek"));
+        tempLat = new LatLng(-36.905729, 174.776971);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Stardome Observatory&Planetarium"));
+        tempLat = new LatLng(-36.835466, 174.741688);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Auckland Bridge Climb and Jump"));
+        tempLat = new LatLng(-36.850998, 174.764734);
+        mMap.addMarker(new MarkerOptions().position(tempLat).title("Escape Masters"));
+
 
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);

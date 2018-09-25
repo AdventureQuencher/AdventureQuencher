@@ -16,16 +16,23 @@
 
         android:layout_alignParentRight="false" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="15dp"
-        android:clickable="true"
-        android:hapticFeedbackEnabled="true"
-        android:src="@drawable/app_logo"
-        app:backgroundTint="@android:color/holo_blue_light" />
+        android:background="@android:drawable/ic_search_category_default" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/baseline_menu_black_18dp" />
 </RelativeLayout>

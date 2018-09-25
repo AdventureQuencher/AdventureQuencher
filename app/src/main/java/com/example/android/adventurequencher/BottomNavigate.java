@@ -35,10 +35,8 @@ public class BottomNavigate extends AppCompatActivity {
                    startActivity(quest);
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText("");
                     return true;
                 case R.id.navigation_notifications:
-                   mTextMessage.setText("null");
                    return true;
             }
             return false;
