@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mfusedLocationProviderclient;
     private static final float DEFAULT_ZOOM = 15f;
     private View mView;
+    private Button searchButton;
+    private Button menuButton;
 
 
     public MapFragment() {
@@ -74,6 +77,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view,savedInstanceState);
 
         mMapView = mView.findViewById(R.id.g_map);
+        searchButton = mView.findViewById(R.id.search_button);
+        menuButton = mView.findViewById(R.id.menu_button);
+
 
         displayLocationSettingsRequest(getContext());
 

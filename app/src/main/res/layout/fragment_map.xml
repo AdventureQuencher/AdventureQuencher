@@ -17,7 +17,7 @@
         android:layout_alignParentRight="false" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/search_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentEnd="true"
@@ -29,7 +29,7 @@
         android:background="@android:drawable/ic_search_category_default" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/menu_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="10dp"

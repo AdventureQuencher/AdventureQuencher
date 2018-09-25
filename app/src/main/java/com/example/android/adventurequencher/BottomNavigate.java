@@ -16,10 +16,17 @@ import android.widget.TextView;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
+/*
+    This class acts as the main activity for the application after the user log into his/her account
+    OnStart() will open the the Google Maps API and The bottom navigation selection which takes in a
+    fragment for its frame. Currently there are 3 options: QuestLog, Leaderboard and Rewards.
+
+    onItemSelect() calls the fragment or activity and displays the layout of the fragment inside the
+    FrameLayout stored in this xml file above the navigation bar.
+ */
 
 public class BottomNavigate extends AppCompatActivity {
 
-    private TextView mTextMessage;
     private FrameLayout mFrame;
     private MapFragment mapFragment = new MapFragment();
 
@@ -49,9 +56,7 @@ public class BottomNavigate extends AppCompatActivity {
         setContentView(R.layout.activity_bottom_navigate);
         getSupportFragmentManager().beginTransaction().replace(R.id.m_frame,mapFragment).commit();
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
