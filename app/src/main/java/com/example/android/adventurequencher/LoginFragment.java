@@ -1,5 +1,6 @@
 package com.example.android.adventurequencher;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -108,6 +109,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
     {
         private String email;
         private String password;
+        private ProgressDialog nDialog;
 
         public ValidateLogin(String emailInput, String passwordInput)
         {
@@ -115,9 +117,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             password = passwordInput;
         }
 
-        protected void onPreExecute(String result)
+        protected void onPreExecute()
         {
-            //TODO: ADD LOADING SCREEN HERE TO SHOW LOGGING IN ATTEMPT
+            Log.d("aq", "loading screen started");
+            nDialog = new ProgressDialog(getActivity());
+            nDialog.setMessage("Please wait..");
+            nDialog.setTitle("Logging in");
+            nDialog.setIndeterminate(false);
+            nDialog.setCancelable(true);
+            nDialog.show();
         }
 
         @Override
@@ -211,6 +219,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener
         @Override
         protected void onPostExecute(String result)
         {
+            try
+            {
+                if (nDialog.isShowing())
+                {
+                    nDialog.dismiss();
+                }
+                nDialog = null;
+            } catch (Exception e)
+            {
+                // nothing
+            }
             if(result.equals("no connection"))
             {
                 Toast.makeText(getActivity(), "Error connecting to server, please check your internet connection settings.",
@@ -238,19 +257,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener
                             Toast.LENGTH_LONG).show();
                 }
             }
-
-
-            /*
-            if (=======)
-            {
-                Intent intent = new Intent(getActivity(),MenuMaps.class);
-                startActivity(intent);
-            } else
-            {
-                TextView error = (TextView) getView().findViewById(R.id.loginError);
-
-                error.setVisibility(View.VISIBLE);
-            }*/
         }
 
         public boolean isNetworkWorking()
