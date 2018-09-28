@@ -2,6 +2,7 @@ package com.example.android.adventurequencher;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -82,11 +83,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Toast.makeText(getContext(),"Clicked",Toast.LENGTH_SHORT).show();
                 PopupMenu popup = new PopupMenu(getContext(),view);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.profile)
+                        {
+                            Intent intent = new Intent(getActivity(),UserProfile.class);
+                            startActivity(intent);
+                        }
                         return false;
                     }
                 });
