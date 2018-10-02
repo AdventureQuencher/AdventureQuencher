@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +55,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Iterator;
 
 import static android.support.constraint.Constraints.TAG;
 import static com.example.android.adventurequencher.MenuMaps.REQUEST_CHECK_SETTINGS;
@@ -205,11 +207,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        LatLng tempLat = new LatLng(-37.132, 174.797);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Spookers"));
-        tempLat = new LatLng(-36.993552, 174.883533);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Rainbows End"));
-
+        new LoadPins().execute();
 
 
         mMap.setMyLocationEnabled(true);
@@ -218,7 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setRotateGesturesEnabled(false);
     }
 
-    private class LoadPins extends AsyncTask<String, Void, String>
+    private class LoadPins extends AsyncTask<String, String, String>
     {
 
         public LoadPins()
@@ -228,6 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         protected void onPreExecute()
         {
+            Log.d("aq", "started to load pins");
         }
 
         @Override
@@ -292,7 +291,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         {
                 try
                 {
+                    JSONObject jsonResult = new JSONObject(result);
+                    JSONArray resultArray = jsonResult.getJSONArray("pin_details");
 
+                    for (int i = 0; i < resultArray.length(); i++)
+                    {
+                        JSONObject obj = resultArray.getJSONObject(i);
+                        String name = obj.getString("location");
+                        double lat = obj.getDouble("lat");
+                        double longitude = obj.getDouble("long");
+
+                        LatLng tempLat = new LatLng(lat, longitude);
+                        mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
+                    }
 
                 }
                 catch (JSONException e)
