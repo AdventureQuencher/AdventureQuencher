@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         LoginFragment fragment = new LoginFragment();
         fragmentTransaction.add(R.id.login_placeholder, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
