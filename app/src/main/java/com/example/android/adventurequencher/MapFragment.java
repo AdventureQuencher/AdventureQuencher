@@ -1,11 +1,18 @@
 package com.example.android.adventurequencher;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -36,6 +43,20 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Iterator;
+
 import static android.support.constraint.Constraints.TAG;
 import static com.example.android.adventurequencher.MenuMaps.REQUEST_CHECK_SETTINGS;
 
@@ -44,7 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView mMapView;
     private FusedLocationProviderClient mfusedLocationProviderclient;
-    private static final float DEFAULT_ZOOM = 15f;
+    private static final float DEFAULT_ZOOM = 12f;
     private View mView;
 
 
@@ -186,33 +207,142 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        LatLng tempLat = new LatLng(-37.132, 174.797);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Spookers"));
-        tempLat = new LatLng(-36.993552, 174.883533);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Rainbows End"));
-        tempLat = new LatLng(-36.848139, 174.762148);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Sky Tower"));
-        tempLat = new LatLng(-36.846651, 174.817454);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Kelly Tarton Sea Life Aquarium"));
-        tempLat = new LatLng(-36.801832, 175.08591);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Waiheke Island Exploration and Zipline"));
-        tempLat = new LatLng(-36.998043, 174.889039);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Vector Wero Whitewater Park"));
-        tempLat = new LatLng(-36.851285, 174.763938);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Odyssey Sensory Maze"));
-        tempLat = new LatLng(-36.999545, 174.794884 );
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Butterfly Creek"));
-        tempLat = new LatLng(-36.905729, 174.776971);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Stardome Observatory&Planetarium"));
-        tempLat = new LatLng(-36.835466, 174.741688);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Auckland Bridge Climb and Jump"));
-        tempLat = new LatLng(-36.850998, 174.764734);
-        mMap.addMarker(new MarkerOptions().position(tempLat).title("Escape Masters"));
+        new LoadPins().execute();
 
 
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
+    }
+
+    private class LoadPins extends AsyncTask<String, String, String>
+    {
+
+        public LoadPins()
+        {
+
+        }
+
+        protected void onPreExecute()
+        {
+            Log.d("aq", "started to load pins");
+        }
+
+        @Override
+        protected String doInBackground(String... params)
+        {
+
+            HttpURLConnection connection;
+            String response = null;
+            try
+            {
+                String link = "http://43.245.55.133/getCoords.php";
+
+                URL url = new URL(link);
+
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod("POST");
+
+
+                //test internet connection by pinging a server
+                if (!isNetworkWorking(getActivity()))
+                {
+                    final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+
+                    dlgAlert.setMessage("Error loading locations, please check your network connection.");
+                    dlgAlert.setTitle("Error");
+                    dlgAlert.setPositiveButton("OK", null);
+                    dlgAlert.setCancelable(true);
+
+
+                    dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intent = new Intent(getActivity(), BottomNavigate.class);
+                            startActivity(intent);
+
+                        }
+                    });
+                    dlgAlert.create().show();
+                } else
+                {
+                    Log.d("aq", "parameters set, url connection opened");
+
+                    Log.d("aq", "starting to build string response from server");
+                    // Read data sent from server
+                    InputStream input = connection.getInputStream();
+                    Log.d("aq", "input stream instantiate");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    Log.d("aq", "buffered reader instantiate");
+                    StringBuilder sb = new StringBuilder();
+                    Log.d("aq", "string builder instantiate");
+                    String line;
+                    Log.d("aq", "reading lines");
+                    while ((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                    }
+
+                    // Response from server after login process will be stored in response variable.
+                    response = sb.toString();
+                    Log.d("aq", "server response!!!!---->" + response);
+                    input.close();
+                    reader.close();
+                }
+            }
+            catch(Exception e)
+            {
+                //e.printStackTrace();
+                Log.d("aq", "error!");
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result)
+        {
+                try
+                {
+                    JSONObject jsonResult = new JSONObject(result);
+                    JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+
+                    for (int i = 0; i < resultArray.length(); i++)
+                    {
+                        JSONObject obj = resultArray.getJSONObject(i);
+                        String name = obj.getString("location");
+                        double lat = obj.getDouble("lat");
+                        double longitude = obj.getDouble("long");
+
+                        LatLng tempLat = new LatLng(lat, longitude);
+                        mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
+                    }
+
+                }
+                catch (JSONException e)
+                {
+                    Toast.makeText(getActivity(), "Error loading pins.",
+                            Toast.LENGTH_LONG).show();
+                }
+        }
+
+        public boolean isNetworkWorking(Context context)
+        {
+            if(context != null) {
+
+                ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                return (networkInfo != null && networkInfo.isConnected());
+
+            }
+            else {
+                Log.d("Network","Not Connected");
+                return false;
+            }
+        }
     }
 }
