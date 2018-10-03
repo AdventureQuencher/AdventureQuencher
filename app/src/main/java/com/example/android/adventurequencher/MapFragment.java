@@ -250,7 +250,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //test internet connection by pinging a server
                 if (!isNetworkWorking(getActivity()))
                 {
-                    //TODO POPUP TO DISPLAY ERROR LOADING PINS
+                    final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+
+                    dlgAlert.setMessage("Error loading locations, please check your network connection.");
+                    dlgAlert.setTitle("Error");
+                    dlgAlert.setPositiveButton("OK", null);
+                    dlgAlert.setCancelable(true);
+
+
+                    dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intent = new Intent(getActivity(), BottomNavigate.class);
+                            startActivity(intent);
+
+                        }
+                    });
+                    dlgAlert.create().show();
                 } else
                 {
                     Log.d("aq", "parameters set, url connection opened");
