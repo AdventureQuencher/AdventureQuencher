@@ -261,7 +261,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Bundle bundle = new Bundle();
                 bundle.putString("locationTitle", title);
                 fragment.setArguments(bundle);
-
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.map_container, fragment);
                 fragmentTransaction.commit();
 
