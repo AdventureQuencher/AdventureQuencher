@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +40,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -209,11 +213,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         new LoadPins().execute();
 
-
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        {
+            @Override
+            public boolean onMarkerClick(Marker marker)
+            {
+                String title = marker.getTitle();
+
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                LocationInfoFragment fragment = new LocationInfoFragment();
+
+                Log.d("aq", "marker clicked: " + title);
+                Bundle bundle = new Bundle();
+                bundle.putString("locationTitle", title);
+                fragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.map_container, fragment);
+                fragmentTransaction.commit();
+
+                return true;
+            }
+
+        });
     }
 
     private class LoadPins extends AsyncTask<String, String, String>
@@ -319,7 +346,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         double longitude = obj.getDouble("long");
 
                         LatLng tempLat = new LatLng(lat, longitude);
-                        mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
+                        MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
+                        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_icon));
+
+                        mMap.addMarker(marker);
                     }
 
                 }
