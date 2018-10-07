@@ -347,7 +347,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         LatLng tempLat = new LatLng(lat, longitude);
                         MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
-                        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_icon));
+                        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));
 
                         mMap.addMarker(marker);
                     }
