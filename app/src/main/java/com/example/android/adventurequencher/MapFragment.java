@@ -44,6 +44,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.Manifest;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,17 +75,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private MapView mMapView;
-    private FusedLocationProviderClient mfusedLocationProviderclient;
     private static final float DEFAULT_ZOOM = 12f;
     private View mView;
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
     public MapFragment() {
         // Required empty public constructor
     }
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    { super.onCreate(savedInstanceState);}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkPermissions();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,16 +101,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view,savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mMapView = mView.findViewById(R.id.g_map);
 
         displayLocationSettingsRequest(getContext());
 
-        if(mMapView != null)
-        {
+        if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
 
@@ -112,26 +125,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void getDeviceLocation() {
-        mfusedLocationProviderclient = LocationServices.getFusedLocationProviderClient(getActivity());
-        try {
-            Task location = mfusedLocationProviderclient.getLastLocation();
-            Task task = location.addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        Log.d(TAG, "onComplete: location found");
-                        Location currentLocation = (Location) task.getResult();
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
 
-                    } else {
-                        Log.d(TAG, "onComplete: location is null");
-                        Toast.makeText(getContext(), "Unable to get Device Location!", Toast.LENGTH_SHORT).show();
+    protected void checkPermissions() {
+        final List<String> missingPermissions = new ArrayList<String>();
+        // check all required dynamic permissions
+        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+            final int result = ContextCompat.checkSelfPermission(this.getContext(), permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+        if (!missingPermissions.isEmpty()) {
+            // request all missing permissions
+            final String[] permissions = missingPermissions
+                    .toArray(new String[missingPermissions.size()]);
+            ActivityCompat.requestPermissions(this.getActivity(), permissions, REQUEST_CODE_ASK_PERMISSIONS);
+        } else {
+            final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+            Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+                    grantResults);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                for (int index = permissions.length - 1; index >= 0; --index) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        return;
                     }
                 }
-            });
-        } catch (SecurityException e) {
-            Log.d(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+                break;
         }
     }
 
@@ -202,7 +229,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.e("MapFragment", "Can't find style. Error: ", e);
         }
 
-        getDeviceLocation();
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -216,27 +242,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setRotateGesturesEnabled(false);
     }
 
-    private class LoadPins extends AsyncTask<String, String, String>
-    {
+    private class LoadPins extends AsyncTask<String, String, String> {
 
-        public LoadPins()
-        {
+        public LoadPins() {
 
         }
 
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             Log.d("aq", "started to load pins");
         }
 
         @Override
-        protected String doInBackground(String... params)
-        {
+        protected String doInBackground(String... params) {
 
             HttpURLConnection connection;
             String response = null;
-            try
-            {
+            try {
                 String link = "http://43.245.55.133/getCoords.php";
 
                 URL url = new URL(link);
@@ -248,9 +269,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
                 //test internet connection by pinging a server
-                if (!isNetworkWorking(getActivity()))
-                {
-                    final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+                if (!isNetworkWorking(getActivity())) {
+                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getActivity());
 
                     dlgAlert.setMessage("Error loading locations, please check your network connection.");
                     dlgAlert.setTitle("Error");
@@ -260,16 +280,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(getActivity(), BottomNavigate.class);
                             startActivity(intent);
 
                         }
                     });
                     dlgAlert.create().show();
-                } else
-                {
+                } else {
                     Log.d("aq", "parameters set, url connection opened");
 
                     Log.d("aq", "starting to build string response from server");
@@ -282,8 +300,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.d("aq", "string builder instantiate");
                     String line;
                     Log.d("aq", "reading lines");
-                    while ((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                     }
 
@@ -293,9 +310,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     input.close();
                     reader.close();
                 }
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 //e.printStackTrace();
                 Log.d("aq", "error!");
             }
@@ -304,43 +319,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
         @Override
-        protected void onPostExecute(String result)
-        {
-                try
-                {
-                    JSONObject jsonResult = new JSONObject(result);
-                    JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject jsonResult = new JSONObject(result);
+                JSONArray resultArray = jsonResult.getJSONArray("pin_details");
 
-                    for (int i = 0; i < resultArray.length(); i++)
-                    {
-                        JSONObject obj = resultArray.getJSONObject(i);
-                        String name = obj.getString("location");
-                        double lat = obj.getDouble("lat");
-                        double longitude = obj.getDouble("long");
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject obj = resultArray.getJSONObject(i);
+                    String name = obj.getString("location");
+                    double lat = obj.getDouble("lat");
+                    double longitude = obj.getDouble("long");
 
-                        LatLng tempLat = new LatLng(lat, longitude);
-                        mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
-                    }
-
+                    LatLng tempLat = new LatLng(lat, longitude);
+                    mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
                 }
-                catch (JSONException e)
-                {
-                    Toast.makeText(getActivity(), "Error loading pins.",
-                            Toast.LENGTH_LONG).show();
-                }
+
+            } catch (JSONException e) {
+                Toast.makeText(getActivity(), "Error loading pins.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
-        public boolean isNetworkWorking(Context context)
-        {
-            if(context != null) {
+        public boolean isNetworkWorking(Context context) {
+            if (context != null) {
 
                 ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 return (networkInfo != null && networkInfo.isConnected());
 
-            }
-            else {
-                Log.d("Network","Not Connected");
+            } else {
+                Log.d("Network", "Not Connected");
                 return false;
             }
         }
