@@ -1,7 +1,7 @@
 package com.example.android.adventurequencher;
 
 import android.Manifest;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -281,7 +281,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //test internet connection by pinging a server
                 if (!isNetworkWorking(getActivity()))
                 {
-                    final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+                    final android.support.v7.app.AlertDialog.Builder dlgAlert  = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
                     dlgAlert.setMessage("Error loading locations, please check your network connection.");
                     dlgAlert.setTitle("Error");
