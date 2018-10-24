@@ -102,6 +102,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         displayLocationSettingsRequest(getContext());
 
+
         if(mMapView != null)
         {
             mMapView.onCreate(null);
