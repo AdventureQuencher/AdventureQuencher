@@ -30,6 +30,8 @@ public class BottomNavigate extends AppCompatActivity {
                 case R.id.navigation_dashboard:
                     return true;
                 case R.id.navigation_notifications:
+                    Intent reward = new Intent(getApplicationContext(),UserReward.class);
+                    startActivity(reward);
                    return true;
             }
             return false;
