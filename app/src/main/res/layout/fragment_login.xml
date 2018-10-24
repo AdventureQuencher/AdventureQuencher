@@ -46,6 +46,18 @@
                     android:textColor="@color/white"/>
             </android.support.design.widget.TextInputLayout>
 
+            <!-- login error message -->
+            <TextView
+                android:id="@+id/loginError"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Email or password is incorrect."
+                android:textColor="@color/colorAccent"
+                android:textSize="16dp"
+                android:visibility="invisible"/>
+
             <!-- login button -->
             <Button
                 android:id="@+id/loginButton"
@@ -66,7 +78,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"
             >
-
             <TextView
                 android:id="@+id/link_signup"
                 android:layout_width="wrap_content"
