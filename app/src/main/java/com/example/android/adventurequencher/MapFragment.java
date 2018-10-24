@@ -1,5 +1,4 @@
 package com.example.android.adventurequencher;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -333,31 +332,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(String result)
         {
-                try
+            try
+            {
+                JSONObject jsonResult = new JSONObject(result);
+                JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+
+                for (int i = 0; i < resultArray.length(); i++)
                 {
-                    JSONObject jsonResult = new JSONObject(result);
-                    JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+                    JSONObject obj = resultArray.getJSONObject(i);
+                    String name = obj.getString("location");
+                    double lat = obj.getDouble("lat");
+                    double longitude = obj.getDouble("long");
 
-                    for (int i = 0; i < resultArray.length(); i++)
-                    {
-                        JSONObject obj = resultArray.getJSONObject(i);
-                        String name = obj.getString("location");
-                        double lat = obj.getDouble("lat");
-                        double longitude = obj.getDouble("long");
+                    LatLng tempLat = new LatLng(lat, longitude);
+                    MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
+                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));
 
-                        LatLng tempLat = new LatLng(lat, longitude);
-                        MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
-                        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));
-
-                        mMap.addMarker(marker);
-                    }
-
+                    mMap.addMarker(marker);
                 }
-                catch (JSONException e)
-                {
-                    Toast.makeText(getActivity(), "Error loading pins.",
-                            Toast.LENGTH_LONG).show();
-                }
+
+            }
+            catch (JSONException e)
+            {
+                Toast.makeText(getActivity(), "Error loading pins.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         public boolean isNetworkWorking(Context context)
