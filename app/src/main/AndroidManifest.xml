@@ -51,6 +51,9 @@
             android:screenOrientation="portrait" />
         <activity android:name=".MainQuest" />
         <activity android:name=".UserProfile"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".MainQuest" />
+        <activity android:name=".QRCode" android:theme="@style/AppTheme.CustomTheme"></activity>
     </application>
 
 </manifest>
