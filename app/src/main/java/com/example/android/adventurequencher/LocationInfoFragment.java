@@ -59,8 +59,6 @@ public class LocationInfoFragment extends Fragment
         Log.d("aq", "loc frag created");
         locTitle.setText(title);
 
-
-
         //no error = successful login
 
         new LocationInfo(title, locDesc, locAddr, locHours).execute();
