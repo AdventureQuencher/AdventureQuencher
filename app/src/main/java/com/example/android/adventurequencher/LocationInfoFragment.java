@@ -65,8 +65,6 @@ public class LocationInfoFragment extends Fragment
 
         new LocationInfo(title, locDesc, locAddr, locHours).execute();
 
-
-
         return view;
     }
 
