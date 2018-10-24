@@ -17,11 +17,10 @@
         android:layout_alignParentRight="false" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/qrcode"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/button2"
         android:layout_marginBottom="11dp"
         android:background="@drawable/icon_qrcode" />
 
@@ -31,5 +30,6 @@
         android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/baseline_menu_black_18dp" />
+        android:background="@drawable/baseline_menu_black
+        _18dp" />
 </RelativeLayout>

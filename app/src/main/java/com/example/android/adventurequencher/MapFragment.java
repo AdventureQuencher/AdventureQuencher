@@ -98,7 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        Button qr = (Button) mView.findViewById(R.id.button);
+        Button qr = (Button) mView.findViewById(R.id.qrcode);
         qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
