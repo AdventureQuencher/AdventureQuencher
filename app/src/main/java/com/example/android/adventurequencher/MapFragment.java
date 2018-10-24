@@ -20,8 +20,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -68,8 +71,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView mMapView;
     private FusedLocationProviderClient mfusedLocationProviderclient;
-    private static final float DEFAULT_ZOOM = 12f;
+    private static final float DEFAULT_ZOOM = 15f;
     private View mView;
+    private Button searchButton;
+    private Button menuButton;
 
 
     public MapFragment() {
@@ -94,6 +99,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view,savedInstanceState);
 
         mMapView = mView.findViewById(R.id.g_map);
+        searchButton = mView.findViewById(R.id.search_button);
+        menuButton = mView.findViewById(R.id.menu_button);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(getContext(),view);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.profile)
+                        {
+                            Intent intent = new Intent(getActivity(),UserProfile.class);
+                            startActivity(intent);
+                        }
+                        return false;
+                    }
+                });
+                popup.inflate(R.menu.user_menu);
+                popup.show();
+            }
+        });
 
         displayLocationSettingsRequest(getContext());
 

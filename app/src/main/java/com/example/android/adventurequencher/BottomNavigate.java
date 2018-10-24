@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 public class BottomNavigate extends AppCompatActivity {
 
-    private TextView mTextMessage;
     private FrameLayout mFrame;
     private MapFragment mapFragment = new MapFragment();
 
@@ -34,7 +33,6 @@ public class BottomNavigate extends AppCompatActivity {
                    return true;
             }
             return false;
-
         }
     };
 
@@ -46,9 +44,7 @@ public class BottomNavigate extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().addToBackStack(null);
         getSupportFragmentManager().beginTransaction().replace(R.id.m_frame, mapFragment).commit();
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
