@@ -8,4 +8,8 @@
     <string name="title_dashboard">Leaderboards</string>
     <string name="title_notifications">Rewards</string>
     <string name="title_activity_main_quest">Quest</string>
+    <string name="placeholder_text">Donec a lorem aliquam, ultricies nulla et, facilisis feugiat velit convallis. Pellentesque in lacus vel odio tincidunt scelerisque nec a enim. Suspendisse sem elit, condimentum nec dictum sit amet, sodales id lacus. Etiam nisi velit, rutrum et porttitor sed, molestie non felis. In id erat condimentum, rhoncus diam consectetur, pulvinar mi. Tempor tortor, ac condimentum lorem. Proin ut porttitor risus. Sed sodales porta elit et cursus. Nulla tempor id enim at mattis. Suspendisse cursus malesuada nunc, et luctus libero vestibulum non. Phasellus ante nunc, lacinia sed finibus id, accumsan a metus.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

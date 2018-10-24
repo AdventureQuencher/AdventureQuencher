@@ -1,5 +1,4 @@
 package com.example.android.adventurequencher;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -17,10 +16,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -38,8 +42,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,8 +71,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView mMapView;
     private FusedLocationProviderClient mfusedLocationProviderclient;
-    private static final float DEFAULT_ZOOM = 12f;
+    private static final float DEFAULT_ZOOM = 15f;
     private View mView;
+    private Button searchButton;
+    private Button menuButton;
 
 
     public MapFragment() {
@@ -91,6 +99,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view,savedInstanceState);
 
         mMapView = mView.findViewById(R.id.g_map);
+        searchButton = mView.findViewById(R.id.search_button);
+        menuButton = mView.findViewById(R.id.menu_button);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(getContext(),view);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.profile)
+                        {
+                            Intent intent = new Intent(getActivity(),UserProfile.class);
+                            startActivity(intent);
+                        }
+                        return false;
+                    }
+                });
+                popup.inflate(R.menu.user_menu);
+                popup.show();
+            }
+        });
 
         displayLocationSettingsRequest(getContext());
 
@@ -209,11 +239,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         new LoadPins().execute();
 
-
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        {
+            @Override
+            public boolean onMarkerClick(Marker marker)
+            {
+                String title = marker.getTitle();
+
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                LocationInfoFragment fragment = new LocationInfoFragment();
+
+                Log.d("aq", "marker clicked: " + title);
+                Bundle bundle = new Bundle();
+                bundle.putString("locationTitle", title);
+                fragment.setArguments(bundle);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.map_container, fragment);
+                fragmentTransaction.commit();
+
+                return true;
+            }
+
+        });
     }
 
     private class LoadPins extends AsyncTask<String, String, String>
@@ -306,28 +358,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(String result)
         {
-                try
+            try
+            {
+                JSONObject jsonResult = new JSONObject(result);
+                JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+
+                for (int i = 0; i < resultArray.length(); i++)
                 {
-                    JSONObject jsonResult = new JSONObject(result);
-                    JSONArray resultArray = jsonResult.getJSONArray("pin_details");
+                    JSONObject obj = resultArray.getJSONObject(i);
+                    String name = obj.getString("location");
+                    double lat = obj.getDouble("lat");
+                    double longitude = obj.getDouble("long");
 
-                    for (int i = 0; i < resultArray.length(); i++)
-                    {
-                        JSONObject obj = resultArray.getJSONObject(i);
-                        String name = obj.getString("location");
-                        double lat = obj.getDouble("lat");
-                        double longitude = obj.getDouble("long");
+                    LatLng tempLat = new LatLng(lat, longitude);
+                    MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
+                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));
 
-                        LatLng tempLat = new LatLng(lat, longitude);
-                        mMap.addMarker(new MarkerOptions().position(tempLat).title(name));
-                    }
-
+                    mMap.addMarker(marker);
                 }
-                catch (JSONException e)
-                {
-                    Toast.makeText(getActivity(), "Error loading pins.",
-                            Toast.LENGTH_LONG).show();
-                }
+
+            }
+            catch (JSONException e)
+            {
+                Toast.makeText(getActivity(), "Error loading pins.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         public boolean isNetworkWorking(Context context)
