@@ -20,6 +20,5 @@
     <ImageView
         android:id="@+id/image_name"
         android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/forest" />
+        android:layout_height="80dp" />
 </RelativeLayout>

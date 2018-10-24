@@ -18,11 +18,11 @@ public class RecyclerQuest extends RecyclerView.Adapter<RecyclerQuest.ViewHolder
 
     private static final String TAG = "RecyclerQuest";
     private ArrayList<String> locationNames = new ArrayList<>();
-    private ArrayList<String> locationImages = new ArrayList<>();
+    private ArrayList<ImageView> locationImages = new ArrayList<>();
     private Context context;
 
     public RecyclerQuest(Context context, ArrayList<String> locationNames,
-                         ArrayList<String> locationImages)
+                         ArrayList<ImageView> locationImages)
     {
         this.locationNames = locationNames;
         this.locationImages = locationImages;
