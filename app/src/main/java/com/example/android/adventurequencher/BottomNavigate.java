@@ -34,6 +34,7 @@ public class BottomNavigate extends AppCompatActivity {
                    return true;
             }
             return false;
+
         }
     };
 
