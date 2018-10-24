@@ -217,7 +217,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
 
-
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
         {
             @Override
