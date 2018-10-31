@@ -67,8 +67,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        //setup view
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
+        //create activity element variables
         Button signUpButton = (Button) view.findViewById(R.id.createAccountButton);
         TextView loginLink = (TextView) view.findViewById(R.id.link_login);
         email = (EditText) view.findViewById(R.id.signUpEmail);
@@ -83,20 +85,22 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
-
+    //method called when user clicks a button/link
     public void onClick(View view)
     {
+        //if user wishes to create an account
         if (view.getId() == R.id.createAccountButton)
         {
+            //gather user inputs
             String emailInput = email.getText().toString();
             String passwordInput = password.getText().toString();
             String password2Input = password2.getText().toString();
             String displayNameInput = displayName.getText().toString();
 
-
-
+            //validate user inputs and save on the database
             new ValidateRegister(emailInput, passwordInput, password2Input, displayNameInput).execute();
         }
+        //if user wants to log in
         if (view.getId() == R.id.link_login)
         {
             // Begin the transaction
@@ -109,6 +113,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    //asynchronous class that executes when the user registers an account to validate their inputs and contact the server
     private class ValidateRegister extends AsyncTask<String, String, String>
     {
         private String email;
@@ -117,6 +122,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         private String displayName;
         private ProgressDialog nDialog;
 
+        //constructor to get user inputs
         public ValidateRegister(String emailInput, String passwordInput, String password2Input, String displayNameInput)
         {
             email = emailInput;
@@ -125,6 +131,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
             displayName = displayNameInput;
         }
 
+        //before thread starts, create loading dialog screen
         protected void onPreExecute()
         {
             Log.d("aq", "registration thread started");
@@ -140,12 +147,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
         protected String doInBackground(String... params)
         {
 
+            //connect to the server
             HttpURLConnection connection;
             OutputStreamWriter request = null;
             String response = null;
             try
             {
-                String link = "http://43.245.55.133/validateRegister.php";
+                String link = "http://43.245.55.133/validateRegister.php";  //server ip and related php script
+                //encode user inputs in the data
                 String data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
                 data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
                 data += "&" + URLEncoder.encode("password2", "UTF-8") + "=" + URLEncoder.encode(password2, "UTF-8");
@@ -163,11 +172,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                 //test internet connection by pinging a server
                 if (!isNetworkWorking(getActivity()))
                 {
-                    response = "no connection";
-                } else
+                    response = "no connection"; //display no connection message
+                }
+
+
+                else
                 {
                     Log.d("aq", "parameters set, url connection opened");
 
+                    //open output stream and write data
                     request = new OutputStreamWriter(connection.getOutputStream());
                     request.write(data);
                     request.flush();
@@ -183,6 +196,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                     Log.d("aq", "string builder instantiate");
                     String line;
                     Log.d("aq", "reading lines");
+
+                    //build string response from server
                     while ((line = reader.readLine()) != null)
                     {
                         sb.append(line);
@@ -190,7 +205,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
 
                     // Response from server after login process will be stored in response variable.
                     response = sb.toString();
-                    Log.d("aq", "server response!!!!---->" + response);
+                    Log.d("aq", "server response---->" + response);
                     input.close();
                     reader.close();
                 }
@@ -201,14 +216,16 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                         Log.d("aq", "error!");
                     }
 
-            return response;
+            return response;    //return server response or no connection error
         }
 
+        //executed after server gives a response
         @Override
         protected void onPostExecute(String result)
         {
             try
             {
+                //remove loading dialogue
                 if (nDialog.isShowing())
                 {
                     nDialog.dismiss();
@@ -219,6 +236,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                 // nothing
             }
 
+            //user wasnt connected to the database, notify them
             if(result.equals("no connection"))
             {
                 Toast.makeText(getActivity(), "Error connecting to server, please check your internet connection settings.",
@@ -228,10 +246,12 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
             {
                 try
                 {
-                    JSONObject jsonResult = new JSONObject(result);
+                    JSONObject jsonResult = new JSONObject(result); //create json object based on the json response
+
                     //no error = successful login
                     if (!jsonResult.getBoolean("error"))
                     {
+                        //create success alert
                         final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
 
                         dlgAlert.setMessage("Account successfully created!");
@@ -239,7 +259,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                         dlgAlert.setPositiveButton("OK", null);
                         dlgAlert.setCancelable(true);
 
-
+                        //ok button to open main activity
                         dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                                     public void onClick(DialogInterface dialog, int which)
@@ -250,8 +270,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                                     }
                                 });
                         dlgAlert.create().show();
-                    } else
+                    }
+                    //account failed to register due to incorrect input
+                    else
                     {
+                        //create alert message to notify user
                         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
 
                         dlgAlert.setMessage("Error registering account. Email already exists");
@@ -260,6 +283,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                         dlgAlert.setCancelable(true);
                         dlgAlert.create().show();
 
+                        //ok button closes alert message for the user to retry
                         dlgAlert.setPositiveButton("Ok",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
