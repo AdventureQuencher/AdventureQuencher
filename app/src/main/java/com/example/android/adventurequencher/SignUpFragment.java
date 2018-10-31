@@ -211,10 +211,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                 }
             }
             catch(Exception e)
-                    {
-                        //e.printStackTrace();
-                        Log.d("aq", "error!");
-                    }
+            {
+                //e.printStackTrace();
+                Log.d("aq", "error!");
+            }
 
             return response;    //return server response or no connection error
         }
@@ -262,13 +262,13 @@ public class SignUpFragment extends Fragment implements View.OnClickListener
                         //ok button to open main activity
                         dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        Intent intent = new Intent(getActivity(), BottomNavigate.class);
-                                        startActivity(intent);
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Intent intent = new Intent(getActivity(), BottomNavigate.class);
+                                startActivity(intent);
 
-                                    }
-                                });
+                            }
+                        });
                         dlgAlert.create().show();
                     }
                     //account failed to register due to incorrect input
