@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+//class collects the required tourist location information data from the server to display to the user
 public class LocationInfoFragment extends Fragment
 {
     private String title;
@@ -47,10 +48,12 @@ public class LocationInfoFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        //inflate view
         View view = inflater.inflate(R.layout.fragment_location_info, container, false);
         Bundle args = getArguments();
         this.title = args.getString("locationTitle", "null");
 
+        //get view elements and store as variables so server responses can be stored here
         TextView locTitle = view.findViewById(R.id.location_title);
         TextView locDesc = view.findViewById(R.id.location_description);
         TextView locAddr = view.findViewById(R.id.location_address);
@@ -59,13 +62,14 @@ public class LocationInfoFragment extends Fragment
         Log.d("aq", "loc frag created");
         locTitle.setText(title);
 
-        //no error = successful login
 
+        //asynchronously collect data and place in the required textviews
         new LocationInfo(title, locDesc, locAddr, locHours).execute();
 
         return view;
     }
 
+    //class collects data from the server and displays it to the user
     private class LocationInfo extends AsyncTask<String, String, String>
     {
         String loc;
@@ -81,11 +85,14 @@ public class LocationInfoFragment extends Fragment
             this.hours = hours;
         }
 
+        //user has clicked on the pin and this class has been called
         protected void onPreExecute()
         {
             Log.d("aq", "started to load location description");
         }
 
+
+        //complete connections
         @Override
         protected String doInBackground(String... params)
         {
@@ -95,7 +102,7 @@ public class LocationInfoFragment extends Fragment
             String response = null;
             try
             {
-                String link = "http://43.245.55.133/locationDescription.php";
+                String link = "http://43.245.55.133/locationDescription.php";   //server ip and uri
                 //user inputs stored in data string to be sent to server
                 String data = URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(loc, "UTF-8");
                 URL url = new URL(link);
@@ -168,6 +175,7 @@ public class LocationInfoFragment extends Fragment
             return response;
         }
 
+        //get data item sent from the server
         @Override
         protected void onProgressUpdate(String... items)
         {
@@ -186,12 +194,8 @@ public class LocationInfoFragment extends Fragment
                 e.printStackTrace();
             }
         }
-        @Override
-        protected void onPostExecute(String result)
-        {
 
-        }
-
+        //check if network connection working for device
         public boolean isNetworkWorking(Context context)
         {
             if(context != null) {

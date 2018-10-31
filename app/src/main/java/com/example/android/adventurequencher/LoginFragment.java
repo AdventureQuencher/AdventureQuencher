@@ -30,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+//fragment displays elements so the user can log in
 public class LoginFragment extends Fragment implements View.OnClickListener
 {
     private EditText email;
@@ -51,11 +52,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        //inflate view to screen
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        //set variables for view items
         email = (EditText) view.findViewById(R.id.email);
         password = (EditText) view.findViewById(R.id.password);
-
         Button login = (Button) view.findViewById(R.id.loginButton);
         TextView signUpLink = (TextView) view.findViewById(R.id.link_signup);
 
@@ -65,17 +67,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
+    //listener for when a user clicks a box
     public void onClick(View view)
     {
+        //user clicks on the login button
         if (view.getId() == R.id.loginButton)
         {
+            //get their inputs
             String emailInput = email.getText().toString();
             String passwordInput = password.getText().toString();
 
-
+            //validate inputs by verifying it with the server
             new ValidateLogin(emailInput, passwordInput).execute();
 
-        } else if (view.getId() == R.id.link_signup)
+        }
+        //user clicks on login button
+        else if (view.getId() == R.id.link_signup)
         {
             // Begin the transaction
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -97,18 +104,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener
         return fragment;
     }
 
+    //class sends user credentials to the server to be verified so they can log in
     private class ValidateLogin extends AsyncTask<String, String, String>
     {
         private String email;
         private String password;
         private ProgressDialog nDialog;
 
+        //store email and password inputs
         public ValidateLogin(String emailInput, String passwordInput)
         {
             email = emailInput;
             password = passwordInput;
         }
 
+        //before sending to server, show a loading screen to indicate processing
         protected void onPreExecute()
         {
             Log.d("aq", "loading screen started");
@@ -120,6 +130,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             nDialog.show();
         }
 
+        //complete task at hand
         @Override
         protected String doInBackground(String... params)
         {
@@ -189,7 +200,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
 
                     // Response from server after login process will be stored in response variable.
                     response = sb.toString();
-                    Log.d("aq", "server response!!!!---->" + response);
+                    Log.d("aq", "server response " + response);
                     //close streams
                     input.close();
                     reader.close();
@@ -208,11 +219,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             return response;
         }
 
+        //after response from server, either log the user in or display error message
         @Override
         protected void onPostExecute(String result)
         {
             try
             {
+                //remove loading screen
                 if (nDialog.isShowing())
                 {
                     nDialog.dismiss();
@@ -222,22 +235,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             {
                 // nothing
             }
+            //user has no internet connection and cannot connect to the server
             if(result.equals("no connection"))
             {
                 Toast.makeText(getActivity(), "Error connecting to server, please check your internet connection settings.",
                         Toast.LENGTH_LONG).show();
             }
+            //process server response
             else
             {
                 try
                 {
-                    JSONObject jsonResult = new JSONObject(result);
+                    JSONObject jsonResult = new JSONObject(result); //server response sent as a json object
+
                     //no error = successful login
                     if (!jsonResult.getBoolean("error"))
                     {
                         Intent intent = new Intent(getActivity(), BottomNavigate.class);
                         startActivity(intent);
-                    } else
+                    }
+                    //server denies log in request
+                    //display error message saying the email or password is incorrect
+                    else
                     {
                         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
 
@@ -264,6 +283,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener
             }
         }
 
+        //check for network connection
         public boolean isNetworkWorking(Context context)
         {
             if(context != null) {

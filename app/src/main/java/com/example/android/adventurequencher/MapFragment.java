@@ -305,6 +305,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    //this class calls the server to retrieve the tourist locations
     private class LoadPins extends AsyncTask<String, String, String> {
 
         public LoadPins()
@@ -325,10 +326,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             String response = null;
             try
             {
-                String link = "http://43.245.55.133/getCoords.php";
+                String link = "http://43.245.55.133/getCoords.php";     //server ip uri
 
                 URL url = new URL(link);
-
+                //establish connections
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -345,7 +346,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     dlgAlert.setPositiveButton("OK", null);
                     dlgAlert.setCancelable(true);
 
-
                     dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which)
@@ -356,7 +356,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                     });
                     dlgAlert.create().show();
-                } else
+                }
+                //if connection is good, complete the request
+                else
                 {
                     Log.d("aq", "parameters set, url connection opened");
 
@@ -370,14 +372,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.d("aq", "string builder instantiate");
                     String line;
                     Log.d("aq", "reading lines");
+
+                    //build response text
                     while ((line = reader.readLine()) != null)
                     {
                         sb.append(line);
                     }
 
                     // Response from server after login process will be stored in response variable.
-                    response = sb.toString();
-                    Log.d("aq", "server response!!!!---->" + response);
+                    response = sb.toString();       //JSON format
+                    Log.d("aq", "server response ---->" + response);
+                    //close streams
                     input.close();
                     reader.close();
                 }
@@ -391,14 +396,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return response;
         }
 
+        //after locations have been retrieved
         @Override
         protected void onPostExecute(String result)
         {
+            //extract information from json result
             try
             {
                 JSONObject jsonResult = new JSONObject(result);
                 JSONArray resultArray = jsonResult.getJSONArray("pin_details");
 
+                //iterate through each result set and storing it in its own variable
                 for (int i = 0; i < resultArray.length(); i++)
                 {
                     JSONObject obj = resultArray.getJSONObject(i);
@@ -406,10 +414,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     double lat = obj.getDouble("lat");
                     double longitude = obj.getDouble("long");
 
+                    //mark the location on the map
                     LatLng tempLat = new LatLng(lat, longitude);
                     MarkerOptions marker = new MarkerOptions().position(tempLat).title(name);
-                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));
-
+                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.app_logo_no_shadow_icon));  //custom icon used
                     mMap.addMarker(marker);
                 }
 
@@ -421,6 +429,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
+        //check if device has internet connection
         public boolean isNetworkWorking(Context context)
         {
             if(context != null) {

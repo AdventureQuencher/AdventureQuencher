@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+//this class hosts the login activity for where the sign in and login fragments are occupied
 public class LoginActivity extends AppCompatActivity
 {
     @Override
@@ -16,8 +17,10 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //set background image (copyright free)
         getWindow().setBackgroundDrawableResource(R.drawable.background_tongariro_crossing);
 
+        //load intitial fragment of the login screen
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         LoginFragment fragment = new LoginFragment();
