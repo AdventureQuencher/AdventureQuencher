@@ -29,6 +29,14 @@
         android:background="@android:drawable/ic_search_category_default" />
 
     <Button
+        android:id="@+id/qrcode"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="11dp"
+        android:background="@drawable/icon_qrcode" />
+
+    <Button
         android:id="@+id/menu_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
